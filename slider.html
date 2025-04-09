@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Clean Image Slider</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+
+    .slider {
+      width: 600px;
+      height: 450px; /* Increased height */
+      overflow: hidden;
+      position: relative;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .buttons {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    .buttons button {
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 5px;
+      background: #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slider">
+  <div class="slides" id="slides">
+    <div class="slide"><img src="img1.jpg" alt="Slide 1"></div>
+    <div class="slide"><img src="img2.jpg" alt="Slide 2"></div>
+    <div class="slide"><img src="img3.jpg" alt="Slide 3"></div>
+    <div class="slide"><img src="img4.jpg" alt="Slide 4"></div>
+    <div class="slide"><img src="img5.jpg" alt="Slide 5"></div>
+  </div>
+
+  <div class="buttons">
+    <button onclick="prevSlide()">❮</button>
+    <button onclick="nextSlide()">❯</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  const slides = document.getElementById("slides");
+  const totalSlides = slides.children.length;
+  const dotsContainer = document.getElementById("dots");
+
+  let currentIndex = 0;
+
+  // Create dots
+  for (let i = 0; i < totalSlides; i++) {
+    let dot = document.createElement("span");
+    dot.classList.add("dot");
+    dot.addEventListener("click", () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  }
+
+  const dots = document.querySelectorAll(".dot");
+
+  function updateSlider() {
+    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[currentIndex].classList.add("active");
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateSlider();
+    resetAutoSlide();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateSlider();
+    resetAutoSlide();
+  }
+
+  function goToSlide(index) {
+    currentIndex = index;
+    updateSlider();
+    resetAutoSlide();
+  }
+
+  function resetAutoSlide() {
+    clearInterval(autoSlide);
+    autoSlide = setInterval(nextSlide, 4000);
+  }
+
+  let autoSlide = setInterval(nextSlide, 4000);
+  updateSlider();
+</script>
+
+</body>
+</html>
